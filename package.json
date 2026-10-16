@@ -10,5 +10,8 @@
   "preferGlobal": true,
   "bin": {
     "hakai": "app.js"
+  },
+  "scripts": {
+    "test": "node --test \"test/**/*.test.js\""
   }
 }

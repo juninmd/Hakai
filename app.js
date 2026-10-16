@@ -1,50 +1,30 @@
 #!/usr/bin/env node
 const fs = require('fs');
+const { createDeleter } = require('./src/deleter');
+const { createAnimator } = require('./src/animator');
 
-if (process.argv.length == 2) {
-    console.log('[HAKAI] Utilize `$ hakai "<caminho>"` (Não se esqueça das aspas)')
-    return;
+const target = process.argv[2];
+if (!target) {
+  console.log('[HAKAI] Utilize `$ hakai "<caminho>"` (Não se esqueça das aspas)');
+  process.exit(0);
+}
+if (!fs.existsSync(target)) {
+  console.log('[HAKAI] O caminho ' + target + ' não existe.');
+  process.exit(0);
 }
 
-let pathToKill = process.argv[2];
-let mum = 0;
-hakai = function (dirPath) {
-    try {
-        if (!fs.existsSync(dirPath)) {
-            console.log('[HAKAI] O caminho ' + dirPath + ' não existe.')
-            return;
-        }
-        mum = mum + 1;
-        const files = fs.readdirSync(dirPath);
-        if (files.length > 0)
-
-            for (let i = 0; i < files.length; i++) {
-                var filePath = dirPath + '/' + files[i];
-
-                if (fs.statSync(filePath).isFile())
-                    fs.unlinkSync(filePath);
-                else {
-                    fs.renameSync(filePath, pathToKill + mum);
-                    filePath = pathToKill + mum;
-                    hakai(filePath);
-                }
-
-            }
-
-        fs.rmdirSync(dirPath);
-    }
-    catch (e) {
-        console.error(e.message);
-
-        try {
-            hakai(filePath);
-        }
-        catch (ex) {
-            console.error(ex.message);
-        }
-    }
+const animator = createAnimator({ stream: process.stdout });
+const errors = [];
+const reporter = {
+  onDelete: (path) => animator.step(path),
+  onError: (message) => errors.push(message),
 };
 
-
-console.log("[HAKAI] Iniciando exclusão de todos os arquivos do caminho: " + pathToKill);
-hakai(pathToKill);
+animator.start();
+try {
+  createDeleter({ root: target, reporter }).run();
+} catch (e) {
+  errors.push(e.message);
+}
+animator.finish('[HAKAI] Exclusão concluída: ' + target);
+errors.forEach((message) => console.error(message));
