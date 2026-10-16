@@ -45,4 +45,4 @@ Tests use `node:test`, which ships with Node.js 18 or later.
 
 ---
 
-<p align="center"><sub>Hakai is the destruction power of Beerus and Zamasu in Dragon Ball Super.</sub></p>
+<p align="center"><sub>Hakai is the destruction power wielded by the Gods of Destruction in Dragon Ball Super.</sub></p>
