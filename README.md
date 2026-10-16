@@ -1,52 +1,48 @@
 <h1 align="center">Hakai 破壊</h1>
 
 <p align="center">
-  <img src="https://i.ytimg.com/vi/ER0JXV-nLoc/maxresdefault.jpg" alt="Bills dando Hakai em Zamasu" width="600">
+  <img src="docs/hakai.gif" alt="Hakai animation in the terminal" width="720">
 </p>
 
 <p align="center">
-  <b>Apaga pastas e arquivos que o sistema não consegue remover — com estilo.</b>
-</p>
-
-<p align="center">
-  <img src="docs/hakai.gif" alt="Animação Hakai no terminal" width="720">
+  <b>Deletes folders and files that the system refuses to remove, in style.</b>
 </p>
 
 ---
 
-## Por que existe
+## Why it exists
 
-Em versões antigas do Node.js, as pastas do `node_modules` ficam com caminhos muito longos. No Windows, o sistema se recusa a apagar essas pastas. O Hakai resolve isso renomeando subpastas para caminhos curtos antes de removê-las.
+On older Node.js versions, `node_modules` folders end up with very long paths. On Windows, the system refuses to delete them. Hakai works around this by renaming subfolders to shorter paths before removing them.
 
-## Recursos
+## Features
 
-- Remove arquivos e pastas com caminhos longos.
-- Aceita um arquivo único ou uma pasta inteira.
-- Animação de energia Hakai no terminal, com contador de itens destruídos.
-- Sem animação quando a saída não é um terminal (pipes, logs e CI).
+- Removes files and folders with long paths.
+- Accepts a single file or a whole folder.
+- Hakai energy animation in the terminal, with a counter of destroyed items.
+- No animation when the output is not a terminal (pipes, logs, CI).
 
-## Instalação
+## Installation
 
 ```bash
 yarn global add hakai
 ```
 
-## Uso
+## Usage
 
 ```bash
-hakai "D:\Minha Pasta"
+hakai "D:\My Folder"
 ```
 
-> Use aspas quando o caminho tiver espaços.
+> Use quotes when the path contains spaces.
 
-## Desenvolvimento
+## Development
 
 ```bash
 npm test
 ```
 
-Os testes usam `node:test`, que já vem com o Node.js 18 ou superior.
+Tests use `node:test`, which ships with Node.js 18 or later.
 
 ---
 
-<p align="center"><sub>Hakai é o poder de destruição de Beerus e Zamasu em Dragon Ball Super.</sub></p>
+<p align="center"><sub>Hakai is the destruction power of Beerus and Zamasu in Dragon Ball Super.</sub></p>
