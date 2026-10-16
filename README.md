@@ -1,18 +1,52 @@
-# Hakai
+<h1 align="center">Hakai 破壊</h1>
 
-![Bills dando Hakai em Zamasu](https://i.ytimg.com/vi/ER0JXV-nLoc/maxresdefault.jpg)
+<p align="center">
+  <img src="https://i.ytimg.com/vi/ER0JXV-nLoc/maxresdefault.jpg" alt="Bills dando Hakai em Zamasu" width="600">
+</p>
 
-Solução para apagar arquivos que excedem o caminho máximo de origem do windows.
-Normalmente quando estamos utilizando node.js em versões antigas as pastinhas no 'node_modules' acabam tendo um path muito grande e caso escolhemos por apagar a pasta o sistema não deixa, por isso desenvolvi esse código que resolverá esse problema.
+<p align="center">
+  <b>Apaga pastas e arquivos que o sistema não consegue remover — com estilo.</b>
+</p>
 
-![alt tag](http://i.imgur.com/IZ2zLHc.jpg)
+<p align="center">
+  <img src="docs/hakai.gif" alt="Animação Hakai no terminal" width="720">
+</p>
 
-# Instalação:
+---
+
+## Por que existe
+
+Em versões antigas do Node.js, as pastas do `node_modules` ficam com caminhos muito longos. No Windows, o sistema se recusa a apagar essas pastas. O Hakai resolve isso renomeando subpastas para caminhos curtos antes de removê-las.
+
+## Recursos
+
+- Remove arquivos e pastas com caminhos longos.
+- Aceita um arquivo único ou uma pasta inteira.
+- Animação de energia Hakai no terminal, com contador de itens destruídos.
+- Sem animação quando a saída não é um terminal (pipes, logs e CI).
+
+## Instalação
+
+```bash
+yarn global add hakai
 ```
-    $ yarn global add hakai
+
+## Uso
+
+```bash
+hakai "D:\Minha Pasta"
 ```
 
-# Utilização:
+> Use aspas quando o caminho tiver espaços.
+
+## Desenvolvimento
+
+```bash
+npm test
 ```
-    $ hakai "D:\Minha Pasta"
-```
+
+Os testes usam `node:test`, que já vem com o Node.js 18 ou superior.
+
+---
+
+<p align="center"><sub>Hakai é o poder de destruição de Beerus e Zamasu em Dragon Ball Super.</sub></p>
