@@ -27,6 +27,14 @@ function cellAt(x, y, sphere) {
   return color + SHADES[level] + RESET;
 }
 
+// Keeps the end of the label (the part that names the item) within the line, after a 2-column indent.
+function truncateLabel(label, cols) {
+  const room = Math.max(cols - 2, 0);
+  if (label.length <= room) return label;
+  if (room === 0) return '';
+  return '…' + label.slice(label.length - (room - 1));
+}
+
 function renderFrame({ frame, cols, rows, progress, label, count }) {
   const sphereRows = Math.max(rows - 2, 1);
   const maxRadius = Math.max(Math.floor(Math.min((sphereRows - 1) / 2, cols / 4)), 1);
@@ -46,8 +54,9 @@ function renderFrame({ frame, cols, rows, progress, label, count }) {
   }
 
   const status = `${PALETTE[4]}破壊 HAKAI${RESET} — ${count} destruído(s)`;
-  const target = label.length > cols - 4 ? '…' + label.slice(-(cols - 5)) : label;
-  lines.push(status, `  ${target}`);
+  const target = truncateLabel(label, cols);
+  const indent = target ? '  ' : '';
+  lines.push(status, `${indent}${target}`);
   return lines;
 }
 

@@ -20,6 +20,18 @@ test('renderFrame truncates long labels to the terminal width', () => {
   assert.ok(lines[lines.length - 1].length <= 40);
 });
 
+test('renderFrame keeps the label line within narrow terminal widths', () => {
+  for (const cols of [1, 2, 3, 4, 5, 6, 20, 80]) {
+    const lines = renderFrame({ ...base, cols, label: '/tmp/caminho-muito-longo' });
+    assert.ok(lines[lines.length - 1].length <= cols, `cols=${cols}`);
+  }
+});
+
+test('renderFrame leaves a short label unchanged', () => {
+  const lines = renderFrame({ ...base, label: 'node_modules' });
+  assert.strictEqual(lines[lines.length - 1], '  node_modules');
+});
+
 test('renderFrame grows the sphere as progress increases', () => {
   const filled = (progress) =>
     renderFrame({ ...base, progress })
