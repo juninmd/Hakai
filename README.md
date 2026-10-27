@@ -44,7 +44,13 @@ For each subfolder, `src/deleter.js` renames it to `<root><n>` (a short sibling 
 
 ```bash
 yarn global add hakai
+# or
+npm install -g hakai
+# or, without installing
+npx hakai "D:\My Folder"
 ```
+
+Hakai runs on Node.js; the test suite needs Node.js 18 or later.
 
 ## Usage
 
