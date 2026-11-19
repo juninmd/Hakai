@@ -92,3 +92,27 @@ test('a symlink passed as root is removed without touching its target', (t) => {
   assert.strictEqual(fs.existsSync(path.join(outside, 'importante.txt')), true);
   fs.rmSync(base, { recursive: true, force: true });
 });
+
+test('does not clobber or fail on siblings named like the shortened paths', () => {
+  const { base, root } = makeTree();
+  const sibDir = path.join(base, 'alvo1');
+  fs.mkdirSync(sibDir);
+  const sibFile = path.join(base, 'alvo2');
+  fs.writeFileSync(sibFile, 'keep');
+  const reporter = fakeReporter();
+  createDeleter({ root, reporter }).run();
+  assert.strictEqual(fs.existsSync(root), false);
+  assert.deepStrictEqual(reporter.errors, []);
+  assert.strictEqual(fs.existsSync(sibDir), true);
+  assert.strictEqual(fs.readFileSync(sibFile, 'utf8'), 'keep');
+  fs.rmSync(base, { recursive: true, force: true });
+});
+
+test('a trailing slash on the root does not place shortened folders inside it', () => {
+  const { base, root } = makeTree();
+  const reporter = fakeReporter();
+  createDeleter({ root: root + '/', reporter }).run();
+  assert.strictEqual(fs.existsSync(root), false);
+  assert.deepStrictEqual(reporter.errors, []);
+  fs.rmSync(base, { recursive: true, force: true });
+});
