@@ -1,4 +1,5 @@
 // Removes a file or directory tree, shortening deep paths by renaming subfolders to siblings first.
+// Uses lstat so symlinks are unlinked, never followed (following would delete the link target's contents).
 const fs = require('fs');
 
 function createDeleter({ root, reporter }) {
@@ -9,7 +10,7 @@ function createDeleter({ root, reporter }) {
     for (const name of fs.readdirSync(dirPath)) {
       const child = dirPath + '/' + name;
       try {
-        if (fs.statSync(child).isFile()) {
+        if (!fs.lstatSync(child).isDirectory()) {
           fs.unlinkSync(child);
           reporter.onDelete(child);
         } else {
@@ -27,7 +28,7 @@ function createDeleter({ root, reporter }) {
 
   return {
     run() {
-      if (fs.statSync(root).isFile()) {
+      if (!fs.lstatSync(root).isDirectory()) {
         fs.unlinkSync(root);
         reporter.onDelete(root);
         return;

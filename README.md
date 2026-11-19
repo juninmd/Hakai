@@ -24,6 +24,7 @@ On older Node.js versions, `node_modules` folders end up with very long paths. O
 
 - Removes files and folders with long paths.
 - Accepts a single file or a whole folder.
+- Symbolic links are removed, never followed: the folder they point to is left untouched.
 - Hakai energy animation in the terminal, with a counter of destroyed items.
 - No animation when the output is not a terminal (pipes, logs, CI).
 
