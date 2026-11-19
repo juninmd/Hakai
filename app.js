@@ -5,12 +5,12 @@ const { createAnimator } = require('./src/animator');
 
 const target = process.argv[2];
 if (!target) {
-  console.log('[HAKAI] Utilize `$ hakai "<caminho>"` (Não se esqueça das aspas)');
-  process.exit(0);
+  console.error('[HAKAI] Utilize `$ hakai "<caminho>"` (Não se esqueça das aspas)');
+  process.exit(2);
 }
 if (!fs.existsSync(target)) {
-  console.log('[HAKAI] O caminho ' + target + ' não existe.');
-  process.exit(0);
+  console.error('[HAKAI] O caminho ' + target + ' não existe.');
+  process.exit(1);
 }
 
 const animator = createAnimator({ stream: process.stdout });
@@ -28,3 +28,4 @@ try {
 }
 animator.finish('[HAKAI] Exclusão concluída: ' + target);
 errors.forEach((message) => console.error(message));
+if (errors.length) process.exitCode = 1;
