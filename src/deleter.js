@@ -35,7 +35,13 @@ function createDeleter({ root, reporter }) {
         } else {
           const shortPath = nextShortPath();
           fs.renameSync(child, shortPath);
-          removeDir(shortPath);
+          try {
+            removeDir(shortPath);
+          } catch (e) {
+            // Put what could not be deleted back where the user expects it, not in a sibling like "alvo3".
+            fs.renameSync(shortPath, child);
+            throw e;
+          }
         }
       } catch (e) {
         reporter.onError(e.message);
