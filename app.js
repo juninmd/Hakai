@@ -8,7 +8,8 @@ if (!target) {
   console.error('[HAKAI] Utilize `$ hakai "<caminho>"` (Não se esqueça das aspas)');
   process.exit(2);
 }
-if (!fs.existsSync(target)) {
+// lstat, not existsSync: a dangling symlink is a real entry that existsSync reports as missing
+if (!fs.lstatSync(target, { throwIfNoEntry: false })) {
   console.error('[HAKAI] O caminho ' + target + ' não existe.');
   process.exit(1);
 }
