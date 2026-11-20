@@ -27,3 +27,13 @@ test('exits zero after deleting an existing target', () => {
   assert.strictEqual(res.status, 0);
   assert.strictEqual(fs.existsSync(dir), false);
 });
+
+test('removes a dangling symlink instead of reporting it as missing', () => {
+  const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'hakai-cli-'));
+  const link = path.join(dir, 'dangling');
+  fs.symlinkSync(path.join(dir, 'gone'), link);
+  const res = run(link);
+  assert.strictEqual(res.status, 0);
+  assert.throws(() => fs.lstatSync(link));
+  fs.rmSync(dir, { recursive: true });
+});
