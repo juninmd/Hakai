@@ -56,6 +56,24 @@ test('reports errors through the reporter and keeps going', () => {
   fs.rmSync(base, { recursive: true, force: true });
 });
 
+test('a file that cannot be deleted stays at its original path, not in a renamed sibling', () => {
+  const { base, root } = makeTree();
+  const reporter = fakeReporter();
+  const realUnlink = fs.unlinkSync;
+  fs.unlinkSync = (p) => {
+    if (p.endsWith('b.txt')) throw new Error('EBUSY: fake');
+    return realUnlink(p);
+  };
+  try {
+    assert.throws(() => createDeleter({ root, reporter }).run(), /not empty|ENOTEMPTY/);
+  } finally {
+    fs.unlinkSync = realUnlink;
+  }
+  assert.ok(fs.existsSync(path.join(root, 'sub', 'deep', 'b.txt')));
+  assert.deepStrictEqual(fs.readdirSync(base), ['alvo']);
+  fs.rmSync(base, { recursive: true, force: true });
+});
+
 test('unlinks symlinks without following them into the target', (t) => {
   const { base, root } = makeTree();
   const outside = path.join(base, 'fora');
