@@ -27,6 +27,8 @@ try {
 } catch (e) {
   errors.push(e.message);
 }
-animator.finish('[HAKAI] Exclusão concluída: ' + target);
+animator.finish(errors.length
+  ? '[HAKAI] Exclusão incompleta: ' + target + ' (' + errors.length + ' erro(s))'
+  : '[HAKAI] Exclusão concluída: ' + target);
 errors.forEach((message) => console.error(message));
 if (errors.length) process.exitCode = 1;

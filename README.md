@@ -68,7 +68,7 @@ $ hakai
 [HAKAI] Utilize `$ hakai "<caminho>"` (Não se esqueça das aspas)
 ```
 
-When the run ends it prints `[HAKAI] Exclusão concluída: <path>`. Hakai has no flags or environment variables.
+When the run ends it prints `[HAKAI] Exclusão concluída: <path>`; if any entry could not be deleted it prints `[HAKAI] Exclusão incompleta: <path> (N erro(s))`, lists the errors on stderr and exits 1. Hakai has no flags or environment variables.
 
 ## Known limitations
 
