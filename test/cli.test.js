@@ -37,3 +37,15 @@ test('removes a dangling symlink instead of reporting it as missing', () => {
   assert.throws(() => fs.lstatSync(link));
   fs.rmSync(dir, { recursive: true });
 });
+
+test('does not report success when some entries could not be deleted', () => {
+  const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'hakai-cli-'));
+  fs.writeFileSync(path.join(dir, 'a.txt'), 'a');
+  fs.writeFileSync(path.join(dir, 'locked.txt'), 'b');
+  const preload = path.join(__dirname, 'fixtures', 'failUnlink.js');
+  const res = spawnSync(process.execPath, ['-r', preload, APP, dir], { encoding: 'utf8' });
+  assert.strictEqual(res.status, 1);
+  assert.doesNotMatch(res.stdout, /concluída/);
+  assert.match(res.stdout, /Exclusão incompleta/);
+  fs.rmSync(dir, { recursive: true });
+});
