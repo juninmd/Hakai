@@ -8,6 +8,11 @@ if (!target) {
   console.error('[HAKAI] Utilize `$ hakai "<caminho>"` (Não se esqueça das aspas)');
   process.exit(2);
 }
+// Extra args mean an unquoted path with spaces; deleting only the first piece would be silent data loss.
+if (process.argv.length > 3) {
+  console.error('[HAKAI] Argumentos demais (' + (process.argv.length - 2) + '). Se o caminho tem espacos, use aspas: hakai "<caminho>"');
+  process.exit(2);
+}
 // lstat, not existsSync: a dangling symlink is a real entry that existsSync reports as missing
 if (!fs.lstatSync(target, { throwIfNoEntry: false })) {
   console.error('[HAKAI] O caminho ' + target + ' não existe.');
