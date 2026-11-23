@@ -70,6 +70,7 @@ test('a file that cannot be deleted stays at its original path, not in a renamed
     fs.unlinkSync = realUnlink;
   }
   assert.ok(fs.existsSync(path.join(root, 'sub', 'deep', 'b.txt')));
+  assert.ok(reporter.errors.some((m) => m.includes(`(mantido em: ${path.join(root, 'sub', 'deep')})`)), reporter.errors.join('\n'));
   assert.deepStrictEqual(fs.readdirSync(base), ['alvo']);
   fs.rmSync(base, { recursive: true, force: true });
 });
@@ -130,6 +131,21 @@ test('a trailing slash on the root does not place shortened folders inside it', 
   const { base, root } = makeTree();
   const reporter = fakeReporter();
   createDeleter({ root: root + '/', reporter }).run();
+  assert.strictEqual(fs.existsSync(root), false);
+  assert.deepStrictEqual(reporter.errors, []);
+  fs.rmSync(base, { recursive: true, force: true });
+});
+
+test('a relative root like "." places shortened folders beside it, not inside', () => {
+  const { base, root } = makeTree();
+  const reporter = fakeReporter();
+  const cwd = process.cwd();
+  process.chdir(root);
+  try {
+    createDeleter({ root: '.', reporter }).run();
+  } finally {
+    process.chdir(cwd);
+  }
   assert.strictEqual(fs.existsSync(root), false);
   assert.deepStrictEqual(reporter.errors, []);
   fs.rmSync(base, { recursive: true, force: true });

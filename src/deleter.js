@@ -1,9 +1,11 @@
 // Removes a file or directory tree, shortening deep paths by renaming subfolders to siblings first.
 // Uses lstat so symlinks are unlinked, never followed (following would delete the link target's contents).
 const fs = require('fs');
+const path = require('path');
 
 function createDeleter({ root, reporter }) {
-  const base = root.replace(/[\\/]+$/, '') || root;
+  // Absolute base: for "." or ".." the short names must still land beside the root, not inside it.
+  const base = path.resolve(root);
   let folderCounter = 0;
 
   // Never reuse a name that already exists beside the root: rename would clobber it or fail.
@@ -25,9 +27,11 @@ function createDeleter({ root, reporter }) {
     }
   }
 
-  function removeDir(dirPath) {
+  // shownPath is where the user sees the folder; dirPath may be a shortened sibling while deleting.
+  function removeDir(dirPath, shownPath = dirPath) {
     for (const name of fs.readdirSync(dirPath)) {
       const child = dirPath + '/' + name;
+      const shownChild = shownPath + '/' + name;
       try {
         if (!fs.lstatSync(child).isDirectory()) {
           fs.unlinkSync(child);
@@ -36,10 +40,16 @@ function createDeleter({ root, reporter }) {
           const shortPath = nextShortPath();
           fs.renameSync(child, shortPath);
           try {
-            removeDir(shortPath);
+            removeDir(shortPath, shownChild);
           } catch (e) {
             // Put what could not be deleted back where the user expects it, not in a sibling like "alvo3".
-            fs.renameSync(shortPath, child);
+            try {
+              fs.renameSync(shortPath, child);
+            } catch {
+              e.message += ` (origem: ${shownChild}, atual: ${shortPath})`;
+              throw e;
+            }
+            e.message += ` (mantido em: ${shownChild})`;
             throw e;
           }
         }
@@ -58,7 +68,7 @@ function createDeleter({ root, reporter }) {
         reporter.onDelete(root);
         return;
       }
-      removeDir(root);
+      removeDir(base, root.replace(/[\\/]+$/, '') || root);
     },
   };
 }
