@@ -49,3 +49,16 @@ test('does not report success when some entries could not be deleted', () => {
   assert.match(res.stdout, /Exclusão incompleta/);
   fs.rmSync(dir, { recursive: true });
 });
+
+test('rejects extra arguments without deleting anything', () => {
+  const base = fs.mkdtempSync(path.join(os.tmpdir(), 'hakai-cli-'));
+  const a = path.join(base, 'a');
+  const b = path.join(base, 'b');
+  fs.mkdirSync(a);
+  fs.mkdirSync(b);
+  const res = run(a, b);
+  assert.strictEqual(res.status, 2);
+  assert.match(res.stderr, /Argumentos demais/);
+  assert.ok(fs.existsSync(a) && fs.existsSync(b));
+  fs.rmSync(base, { recursive: true });
+});

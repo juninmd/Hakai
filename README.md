@@ -59,7 +59,7 @@ Hakai runs on Node.js; the test suite needs Node.js 18 or later.
 hakai "D:\My Folder"
 ```
 
-> Use quotes when the path contains spaces.
+> Use quotes when the path contains spaces. Unquoted extra arguments are rejected (exit 2) and nothing is deleted.
 
 Running without a path prints the usage line (output is in Portuguese):
 
